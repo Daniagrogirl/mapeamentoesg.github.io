@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mapeamento de ESG - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    .container-fluid {
+      height: 100%;
+    }
+    .left-section {
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .right-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem;
+      background-color: #f8f9fa;
+    }
+    .brand-title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 2rem;
+    }
+    .logo-esg {
+      max-width: 180px;
+      height: auto;
+      margin-bottom: 2rem;
+    }
+    .form-control {
+      margin-bottom: 1rem;
+    }
+    .google-btn {
+      background-color: #db4437; 
+      color: #fff; 
+      border: none;
+    }
+    .google-btn:hover {
+      background-color: #c33c31;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row h-100">
+      <!-- Lado Esquerdo: Marca / Logo -->
+      <div class="col-md-6 left-section">
+        <!-- Caso queira exibir um logo real, altere o src -->
+        <img src="/static/images/logo.png" alt="Logo ESG" class="logo-esg">
+        <div class="brand-title">Mapeamento de ESG</div>
+        <div class="subtitle">Bem-vindo! Faça seu login para continuar ou cadastre-se.</div>
+      </div>
+
+      <!-- Lado Direito: Formulário de Login -->
+      <div class="col-md-6 right-section">
+        <div class="mx-auto" style="max-width: 400px; width: 100%;">
+          <!-- Formulário de Login Local -->
+          <form method="POST" action="/login">
+            <div class="mb-3">
+              <label for="email" class="form-label">E-mail</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Seu e-mail" required>
+            </div>
+            <div class="mb-3">
+              <label for="senha" class="form-label">Senha</label>
+              <input type="password" class="form-control" id="senha" name="senha" placeholder="Sua senha" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mb-3">Entrar</button>
+          </form>
+
+          <!-- Login com Gmail -->
+          <button class="btn google-btn w-100 mb-3" onclick="window.location.href='/google_login'">
+            Login com Gmail
+          </button>
+
+          <!-- Link: Esqueceu a Senha -->
+          <div class="mb-2">
+            <a href="/esqueceu_senha">Esqueceu a senha?</a>
+          </div>
+
+          <!-- Link: Cadastrar Novo Usuário -->
+          <div class="mb-2">
+            <a href="/cadastro_usuario">Cadastrar Novo Usuário</a>
+          </div>
+
+          <!-- Acesso sem Login -->
+          <div>
+            <a href="/dashboard_public" class="btn btn-secondary w-100">Acesso sem Login</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

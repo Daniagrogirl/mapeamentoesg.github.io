@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastro de Propriedade - Mapeamento de ESG</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Maps API -->
+  <!-- Substitua a KEY pela sua, caso seja diferente -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAvdwUNOdk8qbwvho5jiuIhQ0lXmp7-EgA&callback=initMap" async defer></script>
+
+  <style>
+    #map { 
+      height: 400px; 
+      width: 100%; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container my-4">
+    <h2>Cadastro de Propriedade</h2>
+    <form id="propertyForm">
+      <!-- Dados do Produtor -->
+      <div class="mb-3">
+        <label for="nome_produtor" class="form-label">Nome do Produtor</label>
+        <input type="text" class="form-control" id="nome_produtor" placeholder="Digite seu nome" required>
+      </div>
+
+      <!-- Dados da Propriedade -->
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome da Propriedade</label>
+        <input type="text" class="form-control" id="nome" placeholder="Ex: Fazenda Exemplo" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="area" class="form-label">Área (hectares)</label>
+        <input type="number" step="0.01" class="form-control" id="area" placeholder="Ex: 150.0" required>
+      </div>
+
+      <!-- Práticas ESG -->
+      <div class="mb-3">
+        <label class="form-label">Práticas ESG</label>
+        <div class="row">
+          <!-- Ambientais -->
+          <div class="col-md-4">
+            <h6>Ambientais</h6>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rotacao" name="praticas_esg" value="Rotação de Culturas">
+              <label class="form-check-label" for="rotacao">Rotação de Culturas</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="cobertura" name="praticas_esg" value="Cobertura Vegetal (Adubação Verde)">
+              <label class="form-check-label" for="cobertura">Cobertura Vegetal (Adubação Verde)</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="terraceamento" name="praticas_esg" value="Terraceamento">
+              <label class="form-check-label" for="terraceamento">Terraceamento</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="irrigacao" name="praticas_esg" value="Irrigação de Precisão">
+              <label class="form-check-label" for="irrigacao">Irrigação de Precisão</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="captacao" name="praticas_esg" value="Captação e Armazenamento de Água de Chuva">
+              <label class="form-check-label" for="captacao">Captação e Armazenamento de Água de Chuva</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="monitoramento" name="praticas_esg" value="Monitoramento do Consumo de Água">
+              <label class="form-check-label" for="monitoramento">Monitoramento do Consumo de Água</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="paineis" name="praticas_esg" value="Instalação de Painéis Solares">
+              <label class="form-check-label" for="paineis">Instalação de Painéis Solares</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="eolica" name="praticas_esg" value="Utilização de Energia Eólica">
+              <label class="form-check-label" for="eolica">Utilização de Energia Eólica</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="biogas" name="praticas_esg" value="Produção de Biogás a partir de Resíduos Orgânicos">
+              <label class="form-check-label" for="biogas">Produção de Biogás a partir de Resíduos Orgânicos</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="app" name="praticas_esg" value="Preservação de Áreas de Proteção Permanente">
+              <label class="form-check-label" for="app">Preservação de APP</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="refloresta" name="praticas_esg" value="Reflorestamento e Recuperação de Áreas Degradadas">
+              <label class="form-check-label" for="refloresta">Reflorestamento e Recuperação de Áreas Degradadas</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="agrofloresta" name="praticas_esg" value="Implantação de Sistemas Agroflorestais">
+              <label class="form-check-label" for="agrofloresta">Implantação de Sistemas Agroflorestais</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="compostagem" name="praticas_esg" value="Compostagem de Resíduos Orgânicos">
+              <label class="form-check-label" for="compostagem">Compostagem de Resíduos Orgânicos</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="residuos_quimicos" name="praticas_esg" value="Destinação Correta de Resíduos Químicos">
+              <label class="form-check-label" for="residuos_quimicos">Destinação Correta de Resíduos Químicos</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="reciclagem" name="praticas_esg" value="Reciclagem e Reaproveitamento de Materiais">
+              <label class="form-check-label" for="reciclagem">Reciclagem e Reaproveitamento de Materiais</label>
+            </div>
+          </div>
+          <!-- Sociais -->
+          <div class="col-md-4">
+            <h6>Sociais</h6>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="estruturas" name="praticas_esg" value="Adequação de Estruturas e Ambientes Seguros">
+              <label class="form-check-label" for="estruturas">Adequação de Estruturas e Ambientes Seguros</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="epis" name="praticas_esg" value="Fornecimento e Uso de EPIs">
+              <label class="form-check-label" for="epis">Fornecimento e Uso de EPIs</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="jornadas" name="praticas_esg" value="Jornadas e Condições de Trabalho Regulamentadas">
+              <label class="form-check-label" for="jornadas">Jornadas e Condições de Trabalho Regulamentadas</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="treinamentos_sociais" name="praticas_esg" value="Realização de Treinamentos e Workshops">
+              <label class="form-check-label" for="treinamentos_sociais">Realização de Treinamentos e Workshops</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="parcerias_ensino" name="praticas_esg" value="Parcerias com Instituições de Ensino Técnico">
+              <label class="form-check-label" for="parcerias_ensino">Parcerias com Instituições de Ensino Técnico</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="atualizacao_sociais" name="praticas_esg" value="Atualização Contínua sobre Novas Tecnologias e Métodos Sustentáveis">
+              <label class="form-check-label" for="atualizacao_sociais">Atualização Contínua sobre Novas Tecnologias e Métodos Sustentáveis</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="inclusao" name="praticas_esg" value="Implementação de Projetos de Inclusão Social">
+              <label class="form-check-label" for="inclusao">Implementação de Projetos de Inclusão Social</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="parcerias_produtores_sociais" name="praticas_esg" value="Parcerias com Cooperativas e Produtores Locais">
+              <label class="form-check-label" for="parcerias_produtores_sociais">Parcerias com Cooperativas e Produtores Locais</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="infraestrutura_sociais" name="praticas_esg" value="Investimento em Infraestrutura Comunitária">
+              <label class="form-check-label" for="infraestrutura_sociais">Investimento em Infraestrutura Comunitária</label>
+            </div>
+          </div>
+          <!-- Governança -->
+          <div class="col-md-4">
+            <h6>Governança</h6>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rastreamento_gov" name="praticas_esg" value="Utilização de Sistemas Digitais para Rastreamento de Produtos">
+              <label class="form-check-label" for="rastreamento_gov">Utilização de Sistemas Digitais para Rastreamento de Produtos</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="certificacoes_gov" name="praticas_esg" value="Obtenção de Certificações e Auditorias Externas">
+              <label class="form-check-label" for="certificacoes_gov">Obtenção de Certificações e Auditorias Externas</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="divulgacao_gov" name="praticas_esg" value="Divulgação de Dados de Produção e Sustentabilidade">
+              <label class="form-check-label" for="divulgacao_gov">Divulgação de Dados de Produção e Sustentabilidade</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="normas_gov" name="praticas_esg" value="Adequação às Normas Ambientais e Trabalhistas">
+              <label class="form-check-label" for="normas_gov">Adequação às Normas Ambientais e Trabalhistas</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="registros_gov" name="praticas_esg" value="Manutenção de Registros e Relatórios de Conformidade">
+              <label class="form-check-label" for="registros_gov">Manutenção de Registros e Relatórios de Conformidade</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="auditorias_gov" name="praticas_esg" value="Realização de Auditorias Internas e Externas">
+              <label class="form-check-label" for="auditorias_gov">Realização de Auditorias Internas e Externas</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="gestao_agricola_gov" name="praticas_esg" value="Utilização de Softwares de Gestão Agrícola">
+              <label class="form-check-label" for="gestao_agricola_gov">Utilização de Softwares de Gestão Agrícola</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="sensores_gov" name="praticas_esg" value="Emprego de Sensores e IoT para Monitoramento Ambiental">
+              <label class="form-check-label" for="sensores_gov">Emprego de Sensores e IoT para Monitoramento Ambiental</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="drones_gov" name="praticas_esg" value="Uso de Drones para Mapeamento e Monitoramento das Culturas">
+              <label class="form-check-label" for="drones_gov">Uso de Drones para Mapeamento e Monitoramento das Culturas</label>
+            </div>
+          </div>
+        </div>
+        <div class="mt-2">
+          <label for="praticas_outros" class="form-label">Outras Práticas</label>
+          <input type="text" class="form-control" id="praticas_outros" placeholder="Digite outras práticas ESG">
+        </div>
+      </div>
+
+      <!-- Notificações via WhatsApp -->
+      <div class="mb-3">
+        <label for="whatsapp" class="form-label">Número de WhatsApp</label>
+        <input type="text" class="form-control" id="whatsapp" placeholder="Ex: +5511999999999">
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="notificar">
+        <label class="form-check-label" for="notificar">Desejo receber notificações sobre clima, NDVI e relatórios</label>
+      </div>
+
+      <!-- CEP e Botão de busca -->
+      <div class="mb-3">
+        <label for="cep" class="form-label">CEP</label>
+        <div class="input-group">
+          <input type="text" class="form-control" id="cep" placeholder="Digite o CEP">
+          <button class="btn btn-secondary" type="button" id="btnBuscarCep">Buscar CEP</button>
+        </div>
+      </div>
+
+      <!-- Mapa e inputs hidden para lat/lon -->
+      <input type="hidden" id="lat">
+      <input type="hidden" id="lon">
+      <div class="mb-3">
+        <label class="form-label">Localização no Mapa (clique para refinar):</label>
+        <div id="map"></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Cadastrar Propriedade</button>
+    </form>
+
+    <hr>
+    <h3>Propriedades Cadastradas</h3>
+    <div id="propertyList"></div>
+  </div>
+
+  <!-- Bootstrap Bundle com Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    let map;
+    let marker;
+
+    // Inicializa o mapa
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: -16.5, lng: -49.3 },
+        zoom: 6,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      });
+
+      // Ao clicar no mapa, atualiza a posição do marker e dos inputs hidden
+      map.addListener('click', function(event) {
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        updateMarker(lat, lng);
+      });
+    }
+
+    function updateMarker(lat, lng) {
+      if (marker) { 
+        marker.setMap(null); 
+      }
+      marker = new google.maps.Marker({
+        position: { lat, lng },
+        map: map
+      });
+      document.getElementById('lat').value = lat.toFixed(6);
+      document.getElementById('lon').value = lng.toFixed(6);
+    }
+
+    // Busca CEP utilizando ViaCEP + Nominatim
+    document.getElementById('btnBuscarCep').addEventListener('click', function() {
+      let cepValue = document.getElementById('cep').value.trim();
+      if (!cepValue) {
+        alert('Digite um CEP para buscar.');
+        return;
+      }
+      cepValue = cepValue.replace(/\D/g, "");
+      const viaCepUrl = `https://viacep.com.br/ws/${cepValue}/json/`;
+      fetch(viaCepUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.erro) {
+            alert("CEP não encontrado.");
+            return;
+          }
+          // Constrói a query com dados do ViaCEP
+          let query = "";
+          if (data.logradouro) query += data.logradouro + ", ";
+          if (data.bairro) query += data.bairro + ", ";
+          if (data.localidade) query += data.localidade + ", ";
+          if (data.uf) query += data.uf + ", ";
+          query += "Brasil";
+
+          const url = "https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&countrycodes=br&q="
+                      + encodeURIComponent(query);
+
+          fetch(url)
+            .then(resp => resp.json())
+            .then(nominatimData => {
+              console.log("Resposta da API Nominatim:", nominatimData);
+              if (nominatimData.length > 0) {
+                const location = nominatimData[0];
+                const lat = parseFloat(location.lat);
+                const lng = parseFloat(location.lon);
+                map.setCenter({ lat, lng });
+                map.setZoom(14);
+                updateMarker(lat, lng);
+              } else {
+                alert('CEP não encontrado ou inválido.');
+              }
+            })
+            .catch(error => {
+              console.error('Erro ao buscar CEP com Nominatim:', error);
+              alert('Não foi possível buscar o CEP.');
+            });
+        })
+        .catch(error => {
+          console.error('Erro ao buscar CEP com ViaCEP:', error);
+          alert('Não foi possível buscar o CEP.');
+        });
+    });
+
+    // Carrega as propriedades cadastradas (do usuário logado)
+    function loadProperties() {
+      fetch('/propriedades')
+        .then(response => response.json())
+        .then(data => {
+          const propertyList = document.getElementById('propertyList');
+          propertyList.innerHTML = '';
+          data.forEach(prop => {
+            const div = document.createElement('div');
+            div.className = 'card my-2';
+            div.innerHTML = `<div class="card-body">
+                               <strong>${prop.nome}</strong> - Produtor: ${prop.nome_produtor || 'Não informado'}<br>
+                               Área: ${prop.area} ha<br>
+                               Práticas ESG: ${prop.praticas_esg}<br>
+                               Localização: Lat=${prop.lat}, Lon=${prop.lon}<br>
+                               <button class="btn btn-danger btn-sm" onclick="deleteProperty(${prop.id})">Excluir</button>
+                             </div>`;
+            propertyList.appendChild(div);
+          });
+        })
+        .catch(error => console.error('Erro ao carregar propriedades:', error));
+    }
+
+    // Exclui propriedade
+    function deleteProperty(id) {
+      fetch(`/propriedades/${id}`, { method: 'DELETE' })
+        .then(response => response.json())
+        .then(data => {
+          if (data.mensagem) {
+            alert(data.mensagem);
+            loadProperties();
+          } else {
+            alert(JSON.stringify(data));
+          }
+        })
+        .catch(error => console.error('Erro ao excluir propriedade:', error));
+    }
+
+    // Envio do formulário de cadastro
+    document.getElementById('propertyForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Coleta as práticas ESG marcadas
+      let praticasSelecionadas = [];
+      document.querySelectorAll('input[name="praticas_esg"]:checked').forEach(el => {
+        praticasSelecionadas.push(el.value);
+      });
+      let outrasPraticas = document.getElementById('praticas_outros').value;
+      if (outrasPraticas.trim() !== '') {
+        praticasSelecionadas.push(outrasPraticas.trim());
+      }
+      let praticas_str = praticasSelecionadas.join(", ");
+
+      // Coleta dados de notificações
+      const whatsapp = document.getElementById('whatsapp').value;
+      const notificar = document.getElementById('notificar').checked;
+
+      // Lat/Lon
+      const latValue = parseFloat(document.getElementById('lat').value) || null;
+      const lonValue = parseFloat(document.getElementById('lon').value) || null;
+
+      const propriedade = {
+        nome_produtor: document.getElementById('nome_produtor').value,
+        nome: document.getElementById('nome').value,
+        area: parseFloat(document.getElementById('area').value),
+        praticas_esg: praticas_str,
+        lat: latValue,
+        lon: lonValue,
+        whatsapp: whatsapp,
+        notificar: notificar
+      };
+
+      fetch('/propriedades', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(propriedade)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.mensagem) {
+          alert(data.mensagem);
+          document.getElementById('propertyForm').reset();
+          if (marker) { marker.setMap(null); }
+          loadProperties();
+        } else {
+          alert('Erro: ' + JSON.stringify(data));
+        }
+      })
+      .catch(error => console.error('Erro ao adicionar propriedade:', error));
+    });
+
+    // Ao carregar a página
+    window.onload = function() {
+      loadProperties();
+    };
+  </script>
+</body>
+</html>
